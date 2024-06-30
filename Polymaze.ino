@@ -1,7 +1,9 @@
 #include "OledAndIR.h"
+#include "MotorsAndBuzzer.h"
 
 void setup() {
   initializeDisplayAndSensors();
+  initializeMotorsAndBuzzer();
 }
 
 void loop() {

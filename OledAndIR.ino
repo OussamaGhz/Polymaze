@@ -1,4 +1,5 @@
 #include "OledAndIR.h"
+#include "MotorsAndBuzzer.h"
 
 #define OLED_RESET -1
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -42,6 +43,7 @@ void runOnce() {
   sensorValues[4] = analogRead(irSensor5);
 
   updateCalibrationSquares(sensorValues);
+  controlMotorsAndBuzzer(sensorValues);
 
   for (int i = 0; i < 5; i++) {
     Serial.print("Sensor ");

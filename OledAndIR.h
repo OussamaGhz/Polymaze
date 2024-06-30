@@ -26,5 +26,6 @@ void runOnce();
 void displayCalibrationSquares();
 void updateCalibrationSquares(int sensorValues[]);
 int calculateThreshold();
+void controlMotorsAndBuzzer(int sensorValues[]);
 
 #endif // OLED_AND_IR_H
