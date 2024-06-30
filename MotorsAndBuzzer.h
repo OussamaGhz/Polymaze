@@ -1,6 +1,8 @@
 #ifndef MOTORS_AND_BUZZER_H
 #define MOTORS_AND_BUZZER_H
 
+extern int thresholds[5];
+
 const int enb = 4;
 const int en1 = 16;
 const int en2 = 17;

@@ -14,7 +14,7 @@ void initializeMotorsAndBuzzer() {
 void controlMotorsAndBuzzer(int sensorValues[]) {
   bool obstacleDetected = false;
   for (int i = 0; i < 5; i++) {
-    if (sensorValues[i] >= thresholdBlack) {
+   if (sensorValues[i] >= thresholds[i]) {
       obstacleDetected = true;
       break;
     }

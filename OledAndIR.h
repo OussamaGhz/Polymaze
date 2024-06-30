@@ -15,10 +15,9 @@ const int irSensor2 = 27;
 const int irSensor3 = 14;
 const int irSensor4 = 12;
 const int irSensor5 = 13;
+const int ledPin = 23;
 
-extern int thresholdBlack;
-extern int thresholdBlue;
-extern int thresholdRed;
+extern int thresholds[5];
 extern int lastSensorValues[5];
 
 void initializeDisplayAndSensors();
@@ -27,5 +26,7 @@ void displayCalibrationSquares();
 void updateCalibrationSquares(int sensorValues[]);
 int calculateThreshold();
 void controlMotorsAndBuzzer(int sensorValues[]);
+void calibrateRobot();
+int calculateThreshold(int sensorPin);
 
 #endif // OLED_AND_IR_H

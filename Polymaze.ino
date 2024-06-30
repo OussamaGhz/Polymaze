@@ -4,6 +4,7 @@
 void setup() {
   initializeDisplayAndSensors();
   initializeMotorsAndBuzzer();
+  calibrateRobot(); // Call the calibration function
 }
 
 void loop() {
