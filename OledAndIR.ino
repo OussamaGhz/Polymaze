@@ -68,18 +68,6 @@ void displayCalibrationSquares() {
 }
 
 void updateCalibrationSquares(int sensorValues[]) {
-  bool needUpdate = false;
-  for (int i = 0; i < 5; i++) {
-    if (sensorValues[i] != lastSensorValues[i]) {
-      needUpdate = true;
-      break;
-    }
-  }
-
-  if (!needUpdate) {
-    return;
-  }
-
   display.clearDisplay();
 
   int squareSize = 16;
@@ -97,6 +85,7 @@ void updateCalibrationSquares(int sensorValues[]) {
 
   display.display();
 
+  // Update lastSensorValues for comparison in the next iteration
   for (int i = 0; i < 5; i++) {
     lastSensorValues[i] = sensorValues[i];
   }
@@ -141,7 +130,33 @@ void calibrateRobot() {
   thresholds[3] = calculateThreshold(irSensor4);
   thresholds[4] = calculateThreshold(irSensor5);
 
-  // Display final threshold values
+  // Display real-time sensor values during calibration
+  unsigned long startTime = millis();
+  unsigned long calibrationDuration = 30000;  // 30 seconds
+  int sensorValues[5];
+
+  while (millis() - startTime < calibrationDuration) {
+    sensorValues[0] = analogRead(irSensor1);
+    sensorValues[1] = analogRead(irSensor2);
+    sensorValues[2] = analogRead(irSensor3);
+    sensorValues[3] = analogRead(irSensor4);
+    sensorValues[4] = analogRead(irSensor5);
+
+    updateCalibrationSquares(sensorValues);
+
+    // Optionally, print sensor values to Serial for debugging
+    Serial.print("Sensor Values: ");
+    for (int i = 0; i < 5; i++) {
+      Serial.print(sensorValues[i]);
+      Serial.print(" ");
+    }
+    Serial.println();
+
+    // Add a small delay to prevent overwhelming the system with readings
+    delay(100);  // Adjust delay as needed
+  }
+
+  // Display final threshold values after calibration
   Serial.println("Final Thresholds:");
   for (int i = 0; i < 5; i++) {
     Serial.print("Sensor ");
