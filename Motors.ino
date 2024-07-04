@@ -1,40 +1,53 @@
-#include "MotorsAndBuzzer.h"
+#include "Motors.h"
 #include "OledAndIR.h"
 
-void initializeMotorsAndBuzzer() {
+void initializeMotors() {
+  pinMode(ena, OUTPUT);
   pinMode(enb, OUTPUT);
-  pinMode(en1, OUTPUT);
-  pinMode(en2, OUTPUT);
-  pinMode(en3, OUTPUT);
-  pinMode(en4, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
   pinMode(led, OUTPUT);
-  pinMode(buzzer, OUTPUT);
 }
 
-void controlMotorsAndBuzzer(int sensorValues[]) {
-  bool obstacleDetected = false;
-  for (int i = 0; i < 5; i++) {
-   if (sensorValues[i] >= thresholds[i]) {
-      obstacleDetected = true;
-      break;
-    }
-  }
+void adjustSpeed(int speedA,int speedB){
+  analogWrite(ena,speedA);
+  analogWrite(enb,speedB);
+}
 
-  if (obstacleDetected) {
-    digitalWrite(led, HIGH);
-    // digitalWrite(buzzer, HIGH);
-    digitalWrite(enb, HIGH);
-    digitalWrite(en1, HIGH);
-    digitalWrite(en2, LOW);
-    digitalWrite(en3, HIGH);
-    digitalWrite(en4, LOW);
-  } else {
-    digitalWrite(led, LOW);
-    digitalWrite(buzzer, LOW);
-    digitalWrite(enb, LOW);
-    digitalWrite(en1, LOW);
-    digitalWrite(en2, LOW);
-    digitalWrite(en3, LOW);
-    digitalWrite(en4, LOW);
-  }
+void backward(){
+digitalWrite(in1,HIGH);
+digitalWrite(in2,LOW);
+digitalWrite(in3,LOW);
+digitalWrite(in4,HIGH);
+}
+
+void forward(){
+digitalWrite(in1,LOW);
+digitalWrite(in2,HIGH);
+digitalWrite(in3,HIGH);
+digitalWrite(in4,LOW);
+}
+
+void turnLeft(){
+digitalWrite(in1,LOW);
+digitalWrite(in2,HIGH);
+digitalWrite(in3,LOW);
+digitalWrite(in4,LOW);
+}
+
+void turnRight(){
+digitalWrite(in1,LOW);
+digitalWrite(in2,LOW);
+digitalWrite(in3,HIGH);
+digitalWrite(in4,LOW);
+}
+
+
+void turnBack(){
+digitalWrite(in1,LOW);
+digitalWrite(in2,HIGH);
+digitalWrite(in3,LOW);
+digitalWrite(in4,HIGH);
 }

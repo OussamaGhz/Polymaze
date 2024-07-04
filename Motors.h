@@ -1,18 +1,22 @@
-#ifndef MOTORS_AND_BUZZER_H
-#define MOTORS_AND_BUZZER_H
+#ifndef MOTORS_H
+#define MOTORS_H
 
 extern int thresholds[5];
 
+const int ena = 0;
 const int enb = 4;
-const int en1 = 16;
-const int en2 = 17;
-const int en3 = 18;
-const int en4 = 5;
-const int led = 23;
-const int buzzer = 15;
+const int in1 = 16;
+const int in2 = 17;
+const int in3 = 18;
+const int in4 = 5;
 
-void initializeMotorsAndBuzzer();
-void controlMotorsAndBuzzer(int sensorValues[]);
+void initializeMotors();
+void forward();
+void backward();
+void turnLeft();
+void turnRight();
+void turnBack();
+void adjustSpeed(int speedA,int speedB);
 
-#endif // MOTORS_AND_BUZZER_H
+#endif // MOTORS_H
  
