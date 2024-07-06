@@ -1,14 +1,14 @@
 #ifndef MOTORS_H
 #define MOTORS_H
 
-extern int thresholds[5];
-
 const int ena = 0;
 const int enb = 4;
 const int in1 = 16;
 const int in2 = 17;
 const int in3 = 18;
 const int in4 = 5;
+
+
 
 void initializeMotors();
 void forward();

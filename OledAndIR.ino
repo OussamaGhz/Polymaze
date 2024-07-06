@@ -6,7 +6,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 const int OLED_I2C_ADDRESS = 0x3C;
 
-int thresholds[5] = {0, 0, 0, 0, 0};
 int lastSensorValues[5] = {0, 0, 0, 0, 0};
 
 void initializeDisplayAndSensors() {
@@ -94,7 +93,7 @@ void updateCalibrationSquares(int sensorValues[]) {
 int calculateThreshold(int sensorPin) {
   long totalBlack = 0;
   long totalWhite = 0;
-  int readings = 10;
+  int readings = 5;
 
   // Take readings on black surface
   digitalWrite(ledPin, HIGH); // Turn on LED
@@ -120,7 +119,7 @@ int calculateThreshold(int sensorPin) {
   return (averageBlack + averageWhite) / 2;
 }
 
-void calibrateRobot() {
+int * calibrateRobot() {
   displayCalibrationSquares();
 
   // Calibrate each sensor individually
@@ -132,7 +131,7 @@ void calibrateRobot() {
 
   // Display real-time sensor values during calibration
   unsigned long startTime = millis();
-  unsigned long calibrationDuration = 30000;  // 30 seconds
+  unsigned long calibrationDuration = 4000;  // 30 seconds
   int sensorValues[5];
 
   while (millis() - startTime < calibrationDuration) {
@@ -164,4 +163,6 @@ void calibrateRobot() {
     Serial.print(": ");
     Serial.println(thresholds[i]);
   }
+
+  return thresholds;
 }
