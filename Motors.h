@@ -17,6 +17,7 @@ void turnLeft();
 void turnRight();
 void turnBack();
 void adjustSpeed(int speedA,int speedB);
+void controlMotorsAndBuzzer(int sensorValues[]);
 
 #endif // MOTORS_H
  

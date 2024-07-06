@@ -11,7 +11,7 @@ float error = 0.0;
 float previousError = 0.0;
 float integral = 0.0;
 float derivative = 0.0;
-int baseSpeed = 100;
+
 
 // Global variable for thresholds
 int calibratedThresholds[3];
@@ -28,31 +28,6 @@ void setup() {
 }
 
 void loop() {
-  // Read sensor values and determine if over black or white
-  int leftSensor = analogRead(irSensor2) > calibratedThresholds[0] ? 1 : 0;
-  int middleSensor = analogRead(irSensor3) > calibratedThresholds[1] ? 1 : 0;
-  int rightSensor = analogRead(irSensor4) > calibratedThresholds[2] ? 1 : 0;
-
-  // Calculate error based on sensor values
-  error = leftSensor - rightSensor;
-
-  // PID calculations
-  integral += error;
-  derivative = error - previousError;
-  float correction = Kp * error + Ki * integral + Kd * derivative;
-
-  // Adjust motor speeds based on correction
-  int speedA = baseSpeed + correction;
-  int speedB = baseSpeed - correction;
-
-  // Ensure the speeds are within valid range
-  speedA = constrain(speedA, 0, 255);
-  speedB = constrain(speedB, 0, 255);
-
-  // Move forward with adjusted speeds
-  forward();
-  adjustSpeed(speedA, speedB);
-
-  // Update previous error
-  previousError = error;
+  runOnce();
+  controlMotorsAndBuzzer(lastSensorValues);
 }
