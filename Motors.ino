@@ -1,9 +1,9 @@
 #include "Motors.h"
 #include "OledAndIR.h"
 
-const int baseSpeed = 100;
-const int highSpeed = 150;
-const int lowSpeed = 50;
+const int baseSpeed = 75;
+const int highSpeed = 140;
+const int lowSpeed = 70;
 
 void initializeMotors() {
   pinMode(ena, OUTPUT);
@@ -66,20 +66,27 @@ void controlMotorsAndBuzzer(int sensorValues[]) {
   Serial.println();
 
   // Line following logic
-  if (sensorValues[1] < thresholds[1] && sensorValues[2] > thresholds[2] && sensorValues[3] < thresholds[3]) {
+  if (analogRead(irSensor2) < thresholds[1] && analogRead(irSensor3) > thresholds[2] && analogRead(irSensor4) < thresholds[3]) {
     // Move forward
     adjustSpeed(baseSpeed, baseSpeed);
     forward();
-  } else if (sensorValues[1] > thresholds[1] || sensorValues[0] > thresholds[0]) {
-    // Turn slightly left
-    adjustSpeed(highSpeed, lowSpeed);
-    forward();
-  } else if (sensorValues[3] > thresholds[3] || sensorValues[4] > thresholds[4]) {
-    // Turn slightly right
-    adjustSpeed(lowSpeed, highSpeed);
-    forward();
-  } else if ((sensorValues[0] < thresholds[0] && sensorValues[1] < thresholds[1] && sensorValues[2] < thresholds[2] && sensorValues[3] < thresholds[3] && sensorValues[4] < thresholds[4]) || (sensorValues[0] > thresholds[0] && sensorValues[1] > thresholds[1] && sensorValues[2] > thresholds[2] && sensorValues[3] > thresholds[3] && sensorValues[4] > thresholds[4])) {
-    // Stop if all sensors detect either all black or all white
-    adjustSpeed(0, 0);
+  } if (analogRead(irSensor2) > thresholds[1]&& analogRead(irSensor3) < thresholds[2]) {
+   while (analogRead(irSensor3) < thresholds[2]) {
+   adjustSpeed(baseSpeed, lowSpeed);
+   }
+   adjustSpeed(baseSpeed, baseSpeed);
+  }  if (analogRead(irSensor4) > thresholds[3] && analogRead(irSensor3)< thresholds[2]) {
+    while (analogRead(irSensor3) < thresholds[2]) {
+   adjustSpeed(lowSpeed, baseSpeed);
+   }
+   adjustSpeed(baseSpeed, baseSpeed);
+  }  if ((analogRead(irSensor1) < thresholds[0] && analogRead(irSensor2) < thresholds[1] && analogRead(irSensor3) < thresholds[2] && analogRead(irSensor4) < thresholds[3] && analogRead(irSensor5) < thresholds[4])) {
+    turnBack();
+     while (analogRead(irSensor3) < thresholds[2]) {
+   turnBack();
+   adjustSpeed(lowSpeed, lowSpeed);
+   }
+   adjustSpeed(baseSpeed, baseSpeed);
+   forward();
   }
 }
