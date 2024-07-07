@@ -14,7 +14,7 @@ void initializeMotors() {
   pinMode(in4, OUTPUT);
   pinMode(led, OUTPUT);
 }
-
+  
 void adjustSpeed(int speedA, int speedB) {
   analogWrite(ena, speedA);
   analogWrite(enb, speedB);
@@ -48,14 +48,12 @@ void turnRight() {
   digitalWrite(in4, LOW);
 }
 
-
 void turnBack() {
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
 }
-
 
 void controlMotorsAndBuzzer(int sensorValues[]) {
   // Print sensor values for debugging
@@ -65,28 +63,46 @@ void controlMotorsAndBuzzer(int sensorValues[]) {
   }
   Serial.println();
 
+  // Read sensors
+  int leftMost = analogRead(irSensor1);
+  int left = analogRead(irSensor2);
+  int center = analogRead(irSensor3);
+  int right = analogRead(irSensor4);
+  int rightMost = analogRead(irSensor5);
+
   // Line following logic
-  if (analogRead(irSensor2) < thresholds[1] && analogRead(irSensor3) > thresholds[2] && analogRead(irSensor4) < thresholds[3]) {
-    // Move forward
+  if (center > thresholds[2]) {
+    // Move forward if the center sensor is on the line
     adjustSpeed(baseSpeed, baseSpeed);
     forward();
-  } if (analogRead(irSensor2) > thresholds[1]&& analogRead(irSensor3) < thresholds[2]) {
-   while (analogRead(irSensor3) < thresholds[2]) {
-   adjustSpeed(baseSpeed, lowSpeed);
-   }
-   adjustSpeed(baseSpeed, baseSpeed);
-  }  if (analogRead(irSensor4) > thresholds[3] && analogRead(irSensor3)< thresholds[2]) {
-    while (analogRead(irSensor3) < thresholds[2]) {
-   adjustSpeed(lowSpeed, baseSpeed);
-   }
-   adjustSpeed(baseSpeed, baseSpeed);
-  }  if ((analogRead(irSensor1) < thresholds[0] && analogRead(irSensor2) < thresholds[1] && analogRead(irSensor3) < thresholds[2] && analogRead(irSensor4) < thresholds[3] && analogRead(irSensor5) < thresholds[4])) {
+  } else if (left > thresholds[1] && center <= thresholds[2]) {
+    // Turn slightly left if the left sensor is on the line and center sensor is not
+    adjustSpeed(lowSpeed, baseSpeed);
+    turnLeft();
+  } else if (right > thresholds[3] && center <= thresholds[2]) {
+    // Turn slightly right if the right sensor is on the line and center sensor is not
+    adjustSpeed(baseSpeed, lowSpeed);
+    turnRight();
+  } else if (leftMost > thresholds[0] && left <= thresholds[1]) {
+    // Sharp left turn if the leftmost sensor is on the line and left sensor is not
+    adjustSpeed(lowSpeed, highSpeed);
+    turnLeft();
+  } else if (rightMost > thresholds[4] && right <= thresholds[3]) {
+    // Sharp right turn if the rightmost sensor is on the line and right sensor is not
+    adjustSpeed(highSpeed, lowSpeed);
+    turnRight();
+  } else if (leftMost <= thresholds[0] && left <= thresholds[1] && center <= thresholds[2] && right <= thresholds[3] && rightMost <= thresholds[4]) {
+    // If all sensors detect white, turn back
+    adjustSpeed(lowSpeed, lowSpeed);
     turnBack();
-     while (analogRead(irSensor3) < thresholds[2]) {
-   turnBack();
-   adjustSpeed(lowSpeed, lowSpeed);
-   }
-   adjustSpeed(baseSpeed, baseSpeed);
-   forward();
+    while (center <= thresholds[2]) {
+      // Keep turning back until the center sensor detects the line
+      turnBack();
+    }
+    forward();
+  } else if (leftMost > thresholds[0] && left > thresholds[1] && center > thresholds[2] && right > thresholds[3] && rightMost > thresholds[4]) {
+    // If all sensors detect black, the robot is at an intersection
+    adjustSpeed(baseSpeed, baseSpeed);
+    turnRight(); // Prioritize turning right at the intersection
   }
 }
